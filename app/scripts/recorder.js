@@ -19,7 +19,7 @@
     });
     var recording = false,
       currCallback;
-
+    
     var self = this;
     this.node.onaudioprocess = function(e){
       if (!recording) return;
@@ -53,26 +53,11 @@
       worker.postMessage({ command: 'clear' });
     };
 
-    this.getBuffer = function(cb) {
-      currCallback = cb || config.callback;
-      worker.postMessage({ command: 'getBuffer' });
-    };
-
-    this.exportWAV = function(cb, type){
-      currCallback = cb || config.callback;
-      type = type || config.type || 'audio/wav';
-      if (!currCallback) throw new Error('Callback not set');
-      worker.postMessage({
-        command: 'exportWAV',
-        type: type
-      });
-    };
-    
-    this.exportOgg = function(cb){
+    this.encodeOgg = function(cb){
       currCallback = cb || config.callback;
       if (!currCallback) throw new Error('Callback not set');
       worker.postMessage({
-        command: 'exportOgg'
+        command: 'encodeOgg'
       });
     };
 
@@ -89,16 +74,6 @@
 
     source.connect(this.node);
     this.node.connect(this.context.destination);    //this should not be necessary
-  };
-
-  Recorder.forceDownload = function(blob, filename){
-    var url = (window.URL || window.webkitURL).createObjectURL(blob);
-    var link = window.document.createElement('a');
-    link.href = url;
-    link.download = filename || 'output.wav';
-    var click = document.createEvent("Event");
-    click.initEvent("click", true, true);
-    link.dispatchEvent(click);
   };
 
   window.Recorder = Recorder;

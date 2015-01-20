@@ -27,50 +27,31 @@ function startRecording(button) {
 
 function stopRecording(button) {
   recorder && recorder.stop();
+  recorder && recorder.encodeOgg(function(blob) {
+    appendRecording(URL.createObjectURL(blob));
+  });
+  recorder.clear();
   button.disabled = true;
   button.previousElementSibling.disabled = false;
   __log('Stopped recording.');
-  
-  oggTest();
-  recorder.clear();
+
 }
 
-function oggTest() {
-  var url,li,au,hf;
+function appendRecording(url) {
+  var li,au,hf;
 
-  recorder && recorder.exportOgg(function(blob) {
-    url = URL.createObjectURL(blob);
-    li = document.createElement('li');
-    au = document.createElement('audio');
-    hf = document.createElement('a');
+  li = document.createElement('li');
+  au = document.createElement('audio');
+  hf = document.createElement('a');
 
-    au.controls = true;
-    au.src = url;
-    hf.href = url;
-    hf.download = new Date().toISOString() + '.ogg';
-    hf.innerHTML = hf.download;
-    li.appendChild(au);
-    li.appendChild(hf);
-    recordingslist.appendChild(li);
-  });
-}
-
-function createDownloadLink() {
-  recorder && recorder.exportWAV(function(blob) {
-    var url = URL.createObjectURL(blob);
-    var li = document.createElement('li');
-    var au = document.createElement('audio');
-    var hf = document.createElement('a');
-
-    au.controls = true;
-    au.src = url;
-    hf.href = url;
-    hf.download = new Date().toISOString() + '.wav';
-    hf.innerHTML = hf.download;
-    li.appendChild(au);
-    li.appendChild(hf);
-    recordingslist.appendChild(li);
-  });
+  au.controls = true;
+  au.src = url;
+  hf.href = url;
+  hf.download = new Date().toISOString() + '.ogg';
+  hf.innerHTML = hf.download;
+  li.appendChild(au);
+  li.appendChild(hf);
+  recordingslist.appendChild(li);
 }
 
 window.onload = function init() {
