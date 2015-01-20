@@ -10,7 +10,7 @@
                  this.context.createJavaScriptNode).call(this.context,
                                                          bufferLen, 2, 2);
     var worker = new Worker(config.workerPath || WORKER_PATH);
-    console.log(worker);
+  
     worker.postMessage({
       command: 'init',
       config: {
@@ -65,6 +65,14 @@
       worker.postMessage({
         command: 'exportWAV',
         type: type
+      });
+    };
+    
+    this.exportOgg = function(cb){
+      currCallback = cb || config.callback;
+      if (!currCallback) throw new Error('Callback not set');
+      worker.postMessage({
+        command: 'exportOgg'
       });
     };
 

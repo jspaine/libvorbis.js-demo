@@ -36,20 +36,10 @@ function stopRecording(button) {
 }
 
 function oggTest() {
-  var state,
-      data,
-      ogg_blob,
-      url,li,au,hf;
+  var url,li,au,hf;
 
-  state = Vorbis.init(44100, 0.3);
-  
-  recorder && recorder.getBuffer(function(buffers) {
-    Vorbis.encode(state, buffers[0], buffers[1]);
-    data = Vorbis.finish(state);
-    console.log(data);
-    ogg_blob = new Blob([data], {'type': 'audio/ogg'});
-
-    url = URL.createObjectURL(ogg_blob);
+  recorder && recorder.exportOgg(function(blob) {
+    url = URL.createObjectURL(blob);
     li = document.createElement('li');
     au = document.createElement('audio');
     hf = document.createElement('a');

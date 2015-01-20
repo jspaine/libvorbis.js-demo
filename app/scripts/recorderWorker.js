@@ -14,6 +14,9 @@ this.onmessage = function(e){
     case 'exportWAV':
       exportWAV(e.data.type);
       break;
+    case 'exportOgg':
+      exportOgg();
+      break;
     case 'getBuffer':
       getBuffer();
       break;
@@ -48,6 +51,29 @@ function getBuffer() {
   buffers.push( mergeBuffers(recBuffersL, recLength) );
   buffers.push( mergeBuffers(recBuffersR, recLength) );
   this.postMessage(buffers);
+}
+
+function exportOgg() {
+  var state,
+      data,
+      blob;
+  var buffers = [];
+  importScripts('libvorbis.min.js');
+  buffers.push( mergeBuffers(recBuffersL, recLength) );
+  buffers.push( mergeBuffers(recBuffersR, recLength) );
+  
+  // fix!
+  setTimeout(function() {
+    state = Vorbis.init(44100, 0.3);
+
+    Vorbis.encode(state, buffers[0], buffers[1]);
+    data = Vorbis.finish(state);
+
+    blob = new Blob([data], {'type': 'audio/ogg'});
+    this.postMessage(blob);
+  
+  }, 250);
+  
 }
 
 function clear(){
