@@ -5,9 +5,7 @@ Quick working demo of vorbis encoding in the browser
 ## Install/run
 
 ```
-npm install --save-dev
-bower install
-grunt serve
+npm install && bower install && grunt serve
 ```
 
 ## Issues
