@@ -72,7 +72,7 @@ function exportOgg() {
     blob = new Blob([data], {'type': 'audio/ogg'});
     this.postMessage(blob);
   
-  }, 250);
+  }, 500);
   
 }
 
