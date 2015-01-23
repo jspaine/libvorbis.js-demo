@@ -10,7 +10,7 @@ npm install && bower install && grunt serve
 
 ## Issues
 
-Uses getTimeout to find out when the encoders ready
+Fails with >30 second recordings
 
 ## Credits
 
