@@ -1,16 +1,18 @@
+'use strict';
+
 (function(window){
 
   var WORKER_PATH = 'recorderWorker.js';
 
   var Recorder = function(source, cfg){
     var config = cfg || {};
-    var bufferLen = config.bufferLen || 8192;
+    var bufferLen = config.bufferLen || 4096;
     this.context = source.context;
     this.node = (this.context.createScriptProcessor ||
                  this.context.createJavaScriptNode).call(this.context,
                                                          bufferLen, 2, 2);
     var worker = new Worker(config.workerPath || WORKER_PATH);
-  
+    
     worker.postMessage({
       command: 'init',
       config: {
@@ -22,7 +24,9 @@
     
     var self = this;
     this.node.onaudioprocess = function(e){
-      if (!recording) return;
+      if (!recording) {
+        return;
+      }
       self.ondata && self.ondata(e.inputBuffer.getChannelData(0));
       worker.postMessage({
         command: 'record',
@@ -55,7 +59,9 @@
 
     this.encodeOgg = function(cb){
       currCallback = cb || config.callback;
-      if (!currCallback) throw new Error('Callback not set');
+      if (!currCallback) {
+        throw new Error('Callback not set');
+      }
       worker.postMessage({
         command: 'encodeOgg'
       });
